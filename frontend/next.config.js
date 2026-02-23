@@ -1,12 +1,18 @@
 // frontend/next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  output: 'standalone', // IMPORTANTE para Hostinger
   images: {
-    domains: ['sigev.sqtecnologiadainformacao.com', 'localhost'],
+    unoptimized: true,
   },
-  experimental: {
-    optimizeCss: false, // Desabilita otimização de CSS se houver problemas
+  trailingSlash: false,
+  reactStrictMode: true,
+  swcMinify: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   },
 }
 
