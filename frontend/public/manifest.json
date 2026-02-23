@@ -1,0 +1,114 @@
+{
+  "name": "SIGEV - Sistema Integrado de Gestão da Escuta de Violência",
+  "short_name": "SIGEV",
+  "description": "Sistema para registro e gestão da escuta especializada de crianças e adolescentes vítimas ou testemunhas de violência",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f3b5e",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/login.jpg",
+      "sizes": "1920x1080",
+      "type": "image/jpeg",
+      "platform": "wide",
+      "label": "Tela de login do SIGEV"
+    },
+    {
+      "src": "/screenshots/dashboard.jpg",
+      "sizes": "1920x1080",
+      "type": "image/jpeg",
+      "platform": "wide",
+      "label": "Dashboard com gráficos e indicadores"
+    },
+    {
+      "src": "/screenshots/processo.jpg",
+      "sizes": "1920x1080",
+      "type": "image/jpeg",
+      "platform": "wide",
+      "label": "Detalhamento do processo de escuta"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Novo Processo",
+      "short_name": "Novo",
+      "description": "Iniciar um novo processo de escuta",
+      "url": "/portal/processos/novo",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Processos Pendentes",
+      "short_name": "Pendentes",
+      "description": "Visualizar processos pendentes",
+      "url": "/portal/processos?status=pending",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Relatórios",
+      "short_name": "Relatórios",
+      "description": "Acessar relatórios do sistema",
+      "url": "/portal/relatorios",
+      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+    }
+  ],
+  "categories": ["government", "social services", "child protection"],
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "offline_enabled": false,
+  "display_override": ["standalone", "browser"]
+}

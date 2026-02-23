@@ -1,0 +1,72 @@
+/* frontend/components/processes/AttachmentUpload.css */
+.attachment-upload {
+  margin-bottom: 20px;
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #0066FF, #00D4FF);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 12px;
+}
+
+.upload-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 102, 255, 0.3);
+}
+
+.upload-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.upload-progress {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  margin: 12px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #0066FF, #00D4FF);
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  position: absolute;
+  right: 0;
+  top: -20px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.upload-error {
+  background: rgba(255, 20, 147, 0.1);
+  border: 1px solid #FF1493;
+  border-radius: 8px;
+  padding: 10px;
+  color: #FF1493;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.upload-info {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 11px;
+  text-align: center;
+  margin-top: 8px;
+}

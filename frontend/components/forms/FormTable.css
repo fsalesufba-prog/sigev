@@ -1,0 +1,203 @@
+/* frontend/components/forms/FormTable.css */
+.table-container {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  overflow-x: auto;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.form-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1000px;
+}
+
+.form-table th {
+  text-align: left;
+  padding: 16px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.form-table td {
+  padding: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  font-size: 14px;
+}
+
+.action-col {
+  width: 120px;
+  text-align: center;
+}
+
+.form-row {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.form-row:hover {
+  background: rgba(255, 255, 255, 0.02);
+  transform: translateX(5px);
+}
+
+.form-name {
+  font-weight: 600;
+  color: #00D4FF;
+}
+
+.form-description {
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status-badge {
+  display: inline-flex;
+  padding: 4px 12px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-active {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-inactive {
+  background: rgba(107, 114, 128, 0.1);
+  color: #6b7280;
+  border: 1px solid rgba(107, 114, 128, 0.3);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.action-btn:hover:not(:disabled) {
+  transform: scale(1.1);
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.edit-btn:hover {
+  background: #00D4FF;
+  color: white;
+}
+
+.duplicate-btn:hover {
+  background: #8A2BE2;
+  color: white;
+}
+
+.status-btn.activate:hover {
+  background: #10b981;
+  color: white;
+}
+
+.status-btn.deactivate:hover {
+  background: #FF1493;
+  color: white;
+}
+
+.view-details {
+  color: #00D4FF;
+  font-size: 18px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.form-row:hover .view-details {
+  opacity: 1;
+  transform: translateX(5px);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 16px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .form-table {
+    font-size: 13px;
+  }
+  
+  .form-table th,
+  .form-table td {
+    padding: 12px 8px;
+  }
+  
+  .form-description {
+    max-width: 150px;
+  }
+  
+  .action-col {
+    width: 100px;
+  }
+  
+  .action-buttons {
+    gap: 4px;
+  }
+  
+  .action-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+}

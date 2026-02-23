@@ -1,0 +1,201 @@
+.edit-form-page {
+  padding: 24px;
+  min-height: 100vh;
+  background: #0a0a0a;
+}
+
+.edit-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.edit-form-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-cancel {
+  padding: 10px 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-save {
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #0066FF, #8A2BE2);
+  border: none;
+  border-radius: 30px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-save:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -10px rgba(0, 212, 255, 0.5);
+}
+
+.btn-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.edit-form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-metadata {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.metadata-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.metadata-group label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.metadata-group input,
+.metadata-group select,
+.metadata-group textarea {
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.metadata-group input:focus,
+.metadata-group select:focus,
+.metadata-group textarea:focus {
+  outline: none;
+  border-color: #00D4FF;
+}
+
+.edit-form-loading,
+.edit-form-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 16px;
+}
+
+.edit-form-error p {
+  color: #FF1493;
+  font-size: 16px;
+}
+
+.edit-form-error button {
+  padding: 10px 24px;
+  background: rgba(255, 20, 147, 0.1);
+  border: 1px solid #FF1493;
+  border-radius: 30px;
+  color: #FF1493;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-form-error button:hover {
+  background: #FF1493;
+  color: white;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #00D4FF;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .edit-form-page {
+    padding: 16px;
+  }
+
+  .edit-form-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .form-metadata {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========== CORREÇÃO DO DROPDOWN NA EDIÇÃO ========== */
+.metadata-group select {
+  background: #1a1a2e !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  appearance: none; /* Remove estilo padrão */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+.metadata-group select option {
+  background: #1a1a2e !important;
+  color: white !important;
+  padding: 12px;
+}
+
+/* Corrigir hover das opções */
+.metadata-group select option:hover,
+.metadata-group select option:focus,
+.metadata-group select option:active,
+.metadata-group select option:checked {
+  background: linear-gradient(135deg, #0066FF, #8A2BE2) !important;
+  color: white !important;
+}

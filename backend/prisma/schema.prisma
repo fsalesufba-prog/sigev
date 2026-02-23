@@ -1,0 +1,584 @@
+// backend/prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ======================================================
+// ENUMS
+// ======================================================
+
+enum UserRole {
+  ADMIN        // Administrador do sistema
+  PROFESSIONAL // Profissional da rede
+  MANAGER      // Gestor/Coordenador
+}
+
+enum Gender {
+  M     // Masculino
+  F     // Feminino
+  OTHER // Outro
+}
+
+enum IdentificationForm {
+  REVELACAO_ESPONTANEA   // Revelação espontânea pela vítima
+  SUSPEITA_PROFISSIONAL  // Suspeita identificada por profissional
+  DENUNCIA               // Denúncia formal
+}
+
+enum ProcessStatus {
+  PENDING      // Pendente
+  IN_PROGRESS  // Em andamento
+  COMPLETED    // Concluído
+  ARCHIVED     // Arquivado
+}
+
+enum Priority {
+  LOW    // Baixa
+  NORMAL // Normal
+  HIGH   // Alta
+  URGENT // Urgente
+}
+
+enum DeadlineType {
+  DAYS          // Dias corridos
+  BUSINESS_DAYS // Dias úteis
+}
+
+enum EncaminhamentoStatus {
+  PENDING   // Pendente
+  OPENED    // Aberto
+  COMPLETED // Concluído
+  CANCELLED // Cancelado
+}
+
+enum NotificationType {
+  ENCAMINHAMENTO // Notificação de encaminhamento
+  PENDENCIA      // Notificação de pendência
+  ALERTA         // Alerta do sistema
+  SISTEMA        // Notificação do sistema
+}
+
+enum ActionType {
+  LOGIN                     // Login no sistema
+  LOGIN_FAILED              // Tentativa de login falha
+  LOGOUT                    // Logout do sistema
+  FORGOT_PASSWORD           // Solicitação de recuperação de senha
+  FORGOT_PASSWORD_ATTEMPT   // Tentativa de recuperação (email não cadastrado)
+  RESET_PASSWORD            // Redefinição de senha concluída
+  CHANGE_PASSWORD           // Alteração de senha
+  CREATE                    // Criação de registro
+  UPDATE                    // Atualização de registro
+  DELETE                    // Exclusão de registro
+  VIEW                      // Visualização
+  ENCAMINHAR                // Encaminhamento
+}
+
+enum FormType {
+  INITIAL                    // Formulário inicial
+  ESCUTA_ESPECIALIZADA       // Escuta especializada
+  RELATORIO_ENCAMINHAMENTO   // Relatório de encaminhamento
+  RELATORIO_ESCUTA           // Relatório da escuta
+}
+
+enum TicketStatus {
+  ABERTO
+  EM_ANDAMENTO
+  AGUARDANDO
+  RESOLVIDO
+  FECHADO
+}
+
+enum TicketPriority {
+  BAIXA
+  MEDIA
+  ALTA
+  URGENTE
+}
+
+enum TicketCategory {
+  DUVIDA
+  PROBLEMA_TECNICO
+  SOLICITACAO
+  MELHORIA
+  OUTRO
+}
+
+// ======================================================
+// MODELS
+// ======================================================
+
+/// Usuários do sistema (profissionais, administradores, gestores)
+model User {
+  id                String    @id @default(cuid())
+  name              String // Nome completo
+  email             String    @unique // E-mail profissional
+  cpf               String    @unique // CPF
+  phone             String? // Telefone de contato
+  password          String // Hash da senha
+  role              UserRole  @default(PROFESSIONAL)
+  isAdmin           Boolean   @default(false) // Se é administrador
+  
+  // Campos para profissionais
+  registration      String? // Registro profissional (CRP, CRE, etc)
+  specialty         String? // Especialidade
+  council           String? // Conselho (CRP, CREAS, etc)
+  councilNumber     String? // Número do conselho
+  councilState      String? // UF do conselho
+  isActive          Boolean   @default(true) // Profissional ativo/inativo
+  admissionDate     DateTime? // Data de admissão
+  
+  // Controle de acesso
+  loginAttempts     Int       @default(0) // Tentativas de login
+  lockedUntil       DateTime? // Bloqueado até
+  lastLogin         DateTime? // Último login
+  refreshToken      String? // Token para refresh
+  resetToken        String? // Token para reset de senha
+  resetTokenExpires DateTime? // Expiração do token de reset
+  
+  // Controle de registro
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime? // Soft delete
+
+  // Relations
+  professionalUnits     ProfessionalUnit[]
+  actionLogs            ActionLog[]
+  processes             Process[]          @relation("ProfessionalProcess")
+  processViews          ProcessView[]
+  sentNotifications     Notification[]     @relation("SenderNotifications")
+  receivedNotifications Notification[]     @relation("ReceiverNotifications")
+  attachments           Attachment[]
+  processReads          Process[]          @relation("ProcessReader")
+  openedEncaminhamentos Encaminhamento[]   @relation("EncaminhamentoOpener")
+  createdDocuments      Document[]         @relation("DocumentCreator")
+  processNotes          ProcessNote[]
+  systemParametersUpdates SystemParameters[] @relation("SystemParametersUpdater")
+  
+  // 🔥 NOVAS RELAÇÕES PARA TICKETS
+  ticketsCreated        Ticket[]           @relation("TicketCreator")
+  ticketsAssigned       Ticket[]           @relation("TicketAssignee")
+  ticketsClosed         Ticket[]           @relation("TicketCloser")
+  ticketComments        TicketComment[]
+
+  @@index([email])
+  @@index([cpf])
+  @@index([role])
+  @@index([isActive])
+  @@index([specialty])
+}
+
+/// Vínculo entre profissional e unidade (permite histórico)
+model ProfessionalUnit {
+  id             String    @id @default(cuid())
+  professionalId String
+  unitId         String
+  startDate      DateTime // Data de início
+  endDate        DateTime? // Data de fim (se desligado)
+  position       String // Cargo/função
+  registration   String // Matrícula
+  isActive       Boolean   @default(true) // Se vínculo ativo
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Relations
+  professional User @relation(fields: [professionalId], references: [id])
+  unit         Unit @relation(fields: [unitId], references: [id])
+
+  @@unique([professionalId, unitId, startDate])
+  @@index([professionalId])
+  @@index([unitId])
+  @@index([isActive])
+}
+
+/// Unidades da rede de proteção
+model Unit {
+  id          String   @id @default(cuid())
+  name        String // Nome da unidade
+  description String? // Descrição
+  email       String // E-mail oficial
+  phone       String // Telefone
+  address     String // Endereço completo
+  typeId      String // Tipo de unidade
+  isActive    Boolean  @default(true) // Se unidade ativa
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  type                UnitType           @relation(fields: [typeId], references: [id])
+  professionals       ProfessionalUnit[]
+  processes           Process[]          @relation("UnitProcesses")
+  notifications       Notification[]
+  attachments         Attachment[]
+  fromEncaminhamentos Encaminhamento[]   @relation("FromUnit")
+  toEncaminhamentos   Encaminhamento[]   @relation("ToUnit")
+  
+  // 🔥 NOVA RELAÇÃO PARA TICKETS
+  tickets             Ticket[]
+
+  @@index([name])
+  @@index([typeId])
+  @@index([isActive])
+}
+
+/// Tipos de unidade (Conselho Tutelar, MP, Judiciário, etc)
+model UnitType {
+  id          String   @id @default(cuid())
+  description String   @unique // Descrição do tipo
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  units Unit[]
+}
+
+/// Tipos de violência
+model Violence {
+  id                  String   @id @default(cuid())
+  name                String   @unique // Nome da violência
+  description         String // Descrição breve
+  detailedDescription String? // Descrição detalhada
+  isActive            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // Relations
+  processes ProcessViolence[]
+
+  @@index([name])
+  @@index([isActive])
+}
+
+/// Cidadãos (crianças e adolescentes)
+model Citizen {
+  id                String    @id @default(cuid())
+  name              String // Nome completo
+  birthDate         DateTime // Data de nascimento
+  gender            Gender?
+  cpf               String?   @unique // CPF
+  rg                String? // RG
+  motherName        String? // Nome da mãe
+  fatherName        String? // Nome do pai
+  motherCpf         String? // CPF da mãe
+  fatherCpf         String? // CPF do pai
+  address           String? // Endereço
+  phone             String? // Telefone
+  email             String? // E-mail
+  education         String? // Escolaridade
+  hasDisability     Boolean   @default(false) // Tem deficiência?
+  disabilityType    String? // Tipo de deficiência
+  hasHealthProblem  Boolean   @default(false) // Tem problema de saúde?
+  healthProblemDesc String? // Descrição do problema de saúde
+  usesMedication    Boolean   @default(false) // Usa medicação?
+  medicationDesc    String? // Descrição da medicação
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime? // Soft delete
+
+  // Relations
+  processes Process[]
+
+  @@index([cpf])
+  @@index([name])
+  @@index([deletedAt])
+}
+
+/// Processos de escuta especializada
+model Process {
+  id                 String             @id @default(cuid())
+  citizenId          String
+  professionalId     String // Profissional responsável
+  unitId             String // Unidade de origem
+  identificationForm IdentificationForm // Forma de identificação
+  description        String? // Descrição do caso
+  status             ProcessStatus      @default(PENDING)
+  priority           Priority?          @default(NORMAL)
+  deadline           DateTime? // Prazo
+  deadlineType       DeadlineType?      @default(DAYS)
+  deadlineDays       Int? // Dias de prazo
+  isFavorite         Boolean            @default(false) // Favorito
+  readAt             DateTime? // Data da primeira leitura
+  readBy             String? // Quem leu primeiro
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  deletedAt          DateTime? // Soft delete
+
+  // Relations
+  citizen         Citizen           @relation(fields: [citizenId], references: [id])
+  professional    User              @relation("ProfessionalProcess", fields: [professionalId], references: [id])
+  unit            Unit              @relation("UnitProcesses", fields: [unitId], references: [id])
+  reader          User?             @relation("ProcessReader", fields: [readBy], references: [id])
+  violences       ProcessViolence[]
+  attachments     Attachment[]
+  notes           ProcessNote[]
+  views           ProcessView[]
+  encaminhamentos Encaminhamento[]  @relation("ProcessEncaminhamentos")
+  notifications   Notification[]
+
+  @@index([citizenId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([deadline])
+  @@index([priority])
+  @@index([unitId])
+  @@index([professionalId])
+  @@index([deletedAt])
+}
+
+/// Relação N:N entre Processo e Violência
+model ProcessViolence {
+  id         String   @id @default(cuid())
+  processId  String
+  violenceId String
+  createdAt  DateTime @default(now())
+
+  // Relations
+  process  Process  @relation(fields: [processId], references: [id])
+  violence Violence @relation(fields: [violenceId], references: [id])
+
+  @@unique([processId, violenceId])
+}
+
+/// Notas/adendos ao processo
+model ProcessNote {
+  id        String   @id @default(cuid())
+  processId String
+  userId    String // Autor da nota
+  content   String   @db.Text // Conteúdo da nota
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  process Process @relation(fields: [processId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@index([processId])
+  @@index([createdAt])
+}
+
+/// Registro de visualizações do processo
+model ProcessView {
+  id        String   @id @default(cuid())
+  processId String
+  userId    String // Quem visualizou
+  viewedAt  DateTime @default(now()) // Quando visualizou
+
+  // Relations
+  process Process @relation(fields: [processId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@index([processId])
+  @@index([userId])
+  @@index([viewedAt])
+}
+
+/// Encaminhamentos entre unidades
+model Encaminhamento {
+  id           String               @id @default(cuid())
+  processId    String
+  fromUnitId   String // Unidade de origem
+  toUnitId     String // Unidade de destino
+  description  String? // Descrição do encaminhamento
+  deadline     DateTime? // Prazo para resposta
+  deadlineType DeadlineType?        @default(DAYS)
+  deadlineDays Int? // Dias de prazo
+  openedAt     DateTime? // Quando foi aberto
+  openedBy     String? // Quem abriu
+  status       EncaminhamentoStatus @default(PENDING)
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  // Relations
+  process       Process        @relation("ProcessEncaminhamentos", fields: [processId], references: [id])
+  fromUnit      Unit           @relation("FromUnit", fields: [fromUnitId], references: [id])
+  toUnit        Unit           @relation("ToUnit", fields: [toUnitId], references: [id])
+  opener        User?          @relation("EncaminhamentoOpener", fields: [openedBy], references: [id])
+  notifications Notification[]
+
+  @@index([status])
+  @@index([deadline])
+  @@index([processId])
+  @@index([toUnitId])
+  @@index([fromUnitId])
+}
+
+/// Anexos (documentos, imagens, áudios, vídeos)
+model Attachment {
+  id             String   @id @default(cuid())
+  filename       String // Nome do arquivo no servidor
+  originalName   String // Nome original do arquivo
+  path           String // Caminho do arquivo
+  mimeType       String // Tipo MIME
+  size           Int // Tamanho em bytes
+  processId      String?
+  notificationId String?
+  userId         String // Quem fez o upload
+  unitId         String? // Unidade de origem
+  documentId     String?
+  createdAt      DateTime @default(now())
+
+  // Relations
+  process      Process?      @relation(fields: [processId], references: [id])
+  notification Notification? @relation(fields: [notificationId], references: [id])
+  user         User          @relation(fields: [userId], references: [id])
+  unit         Unit?         @relation(fields: [unitId], references: [id])
+  document     Document?     @relation(fields: [documentId], references: [id])
+
+  @@index([processId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+/// Notificações do sistema
+model Notification {
+  id               String           @id @default(cuid())
+  type             NotificationType
+  title            String
+  message          String           @db.Text
+  senderId         String // Quem enviou
+  receiverId       String // Para quem (profissional)
+  receiverUnitId   String? // Para qual unidade
+  encaminhamentoId String?
+  processId        String?
+  readAt           DateTime? // Quando foi lida
+  createdAt        DateTime         @default(now())
+
+  // Relations
+  sender         User            @relation("SenderNotifications", fields: [senderId], references: [id])
+  receiver       User            @relation("ReceiverNotifications", fields: [receiverId], references: [id])
+  receiverUnit   Unit?           @relation(fields: [receiverUnitId], references: [id])
+  encaminhamento Encaminhamento? @relation(fields: [encaminhamentoId], references: [id])
+  process        Process?        @relation(fields: [processId], references: [id])
+  attachments    Attachment[]
+
+  @@index([receiverId, readAt])
+  @@index([receiverUnitId])
+  @@index([createdAt])
+  @@index([type])
+}
+
+/// Documentos do sistema (manuais, orientações)
+model Document {
+  id          String   @id @default(cuid())
+  name        String // Nome do documento
+  description String? // Descrição
+  createdBy   String // Quem criou
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  creator     User         @relation("DocumentCreator", fields: [createdBy], references: [id])
+  attachments Attachment[]
+
+  @@index([name])
+}
+
+/// Formulários dinâmicos
+model Form {
+  id          String   @id @default(cuid())
+  name        String // Nome do formulário
+  type        FormType // Tipo de formulário
+  description String? // Descrição
+  isActive    Boolean  @default(true) // Se está ativo
+  config      Json     @db.Json // Configuração JSON do formulário
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([type])
+  @@index([isActive])
+}
+
+/// Logs de ações dos usuários
+model ActionLog {
+  id          String     @id @default(cuid())
+  userId      String? // ID do usuário (pode ser null para ações sem usuário logado)
+  action      ActionType // Tipo de ação
+  description String? // Descrição da ação
+  ipAddress   String? // IP da máquina
+  oldValue    Json?      @db.Json // Valor anterior (para updates)
+  newValue    Json?      @db.Json // Novo valor (para updates)
+  entityType  String? // Tipo de entidade afetada
+  entityId    String? // ID da entidade afetada
+  createdAt   DateTime   @default(now())
+
+  // Relations
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([action])
+  @@index([createdAt])
+  @@index([entityType, entityId])
+}
+
+/// Parâmetros do sistema (configurações globais)
+model SystemParameters {
+  id          String   @id @default(cuid())
+  sistema     Json     @db.Json // Configurações gerais do sistema
+  seguranca   Json     @db.Json // Configurações de segurança
+  notificacoes Json    @db.Json // Configurações de notificações
+  processos   Json     @db.Json // Configurações de processos
+  upload      Json     @db.Json // Configurações de upload
+  auditoria   Json     @db.Json // Configurações de auditoria
+  updatedAt   DateTime @updatedAt
+  updatedBy   String?  // ID do usuário que fez a última atualização
+
+  // Relations
+  updater User? @relation("SystemParametersUpdater", fields: [updatedBy], references: [id])
+
+  @@index([updatedBy])
+}
+
+/// 🔥 NOVO MODELO: Tickets de Suporte
+model Ticket {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  status      TicketStatus @default(ABERTO)
+  priority    TicketPriority @default(MEDIA)
+  category    TicketCategory
+  createdById String
+  assignedToId String?
+  unitId      String?
+  attachments Json?     @db.Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  closedAt    DateTime?
+  closedById  String?
+
+  // Relations
+  createdBy User    @relation("TicketCreator", fields: [createdById], references: [id])
+  assignedTo User?  @relation("TicketAssignee", fields: [assignedToId], references: [id])
+  closedBy   User?  @relation("TicketCloser", fields: [closedById], references: [id])
+  unit       Unit?  @relation(fields: [unitId], references: [id])
+  comments   TicketComment[]
+
+  @@index([status])
+  @@index([priority])
+  @@index([createdById])
+  @@index([assignedToId])
+  @@index([createdAt])
+}
+
+/// 🔥 NOVO MODELO: Comentários de Tickets
+model TicketComment {
+  id          String   @id @default(cuid())
+  ticketId    String
+  userId      String
+  content     String   @db.Text
+  attachments Json?    @db.Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  ticket Ticket @relation(fields: [ticketId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@index([ticketId])
+  @@index([createdAt])
+}

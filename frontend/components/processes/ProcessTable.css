@@ -1,0 +1,207 @@
+/* frontend/components/processes/ProcessTable.css */
+.table-container {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  overflow-x: auto;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.process-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.process-table th {
+  text-align: left;
+  padding: 16px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.process-table td {
+  padding: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  font-size: 14px;
+}
+
+.favorite-col {
+  width: 50px;
+  text-align: center;
+}
+
+.action-col {
+  width: 50px;
+  text-align: center;
+}
+
+.process-row {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.process-row:hover {
+  background: rgba(255, 255, 255, 0.02);
+  transform: translateX(5px);
+}
+
+.favorite-btn {
+  background: none;
+  border: none;
+  color: #FFD700;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 4px 8px;
+}
+
+.favorite-btn.active {
+  color: #FFD700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.favorite-btn:not(.active) {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.favorite-btn:hover {
+  transform: scale(1.2);
+}
+
+.citizen-name {
+  font-weight: 500;
+  color: #FFFFFF;
+}
+
+.status-badge {
+  display: inline-flex;
+  padding: 4px 12px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-pending {
+  background: rgba(255, 165, 0, 0.1);
+  color: #FFA500;
+  border: 1px solid rgba(255, 165, 0, 0.3);
+}
+
+.status-progress {
+  background: rgba(0, 212, 255, 0.1);
+  color: #00D4FF;
+  border: 1px solid rgba(0, 212, 255, 0.3);
+}
+
+.status-completed {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-archived {
+  background: rgba(107, 114, 128, 0.1);
+  color: #6b7280;
+  border: 1px solid rgba(107, 114, 128, 0.3);
+}
+
+.priority-badge {
+  display: inline-flex;
+  padding: 4px 12px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.priority-urgent {
+  background: rgba(255, 20, 147, 0.1);
+  color: #FF1493;
+  border: 1px solid rgba(255, 20, 147, 0.3);
+}
+
+.priority-high {
+  background: rgba(255, 165, 0, 0.1);
+  color: #FFA500;
+  border: 1px solid rgba(255, 165, 0, 0.3);
+}
+
+.priority-normal {
+  background: rgba(0, 212, 255, 0.1);
+  color: #00D4FF;
+  border: 1px solid rgba(0, 212, 255, 0.3);
+}
+
+.priority-low {
+  background: rgba(107, 114, 128, 0.1);
+  color: #6b7280;
+  border: 1px solid rgba(107, 114, 128, 0.3);
+}
+
+.view-details {
+  color: #00D4FF;
+  font-size: 18px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: inline-block;
+}
+
+.process-row:hover .view-details {
+  opacity: 1;
+  transform: translateX(5px);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 16px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .process-table {
+    font-size: 13px;
+  }
+  
+  .process-table th,
+  .process-table td {
+    padding: 12px 8px;
+  }
+  
+  .status-badge,
+  .priority-badge {
+    padding: 2px 8px;
+    font-size: 11px;
+  }
+}

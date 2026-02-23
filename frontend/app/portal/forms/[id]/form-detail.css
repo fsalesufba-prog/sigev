@@ -1,0 +1,328 @@
+/* frontend/app/portal/forms/[id]/form-detail.css */
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.back-button {
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: #00D4FF;
+  border-color: #00D4FF;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.edit-button, .duplicate-button, .status-button, .delete-button {
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.edit-button {
+  background: linear-gradient(135deg, #0066FF, #00D4FF);
+  color: white;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.duplicate-button {
+  background: #8A2BE2;
+  color: white;
+}
+
+.status-button.activate {
+  background: #10b981;
+  color: white;
+}
+
+.status-button.deactivate {
+  background: #FFA500;
+  color: white;
+}
+
+.delete-button {
+  background: #FF1493;
+  color: white;
+}
+
+.edit-button:hover, .duplicate-button:hover, .status-button:hover, .delete-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.form-info-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.form-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.form-title {
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #FFFFFF, #00D4FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+
+.form-type {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+}
+
+.form-badges {
+  display: flex;
+  gap: 8px;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-badge.active {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-badge.inactive {
+  background: rgba(107, 114, 128, 0.1);
+  color: #6b7280;
+  border: 1px solid rgba(107, 114, 128, 0.3);
+}
+
+.form-description {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.form-meta {
+  display: flex;
+  gap: 24px;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 12px;
+}
+
+.form-tabs {
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab-button:hover {
+  color: white;
+}
+
+.tab-button.active {
+  background: #00D4FF;
+  color: white;
+}
+
+.tab-content {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.form-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.preview-section {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 24px;
+}
+
+.preview-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.preview-section-title {
+  color: #00D4FF;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.preview-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.preview-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.preview-field-label {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.required-mark {
+  color: #FF1493;
+  margin-left: 4px;
+}
+
+.preview-field-input {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.preview-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.preview-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  cursor: not-allowed;
+}
+
+.preview-radio-label input[type="radio"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.preview-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+}
+
+.preview-checkbox input[type="checkbox"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.field-disabled-warning {
+  color: #FFA500;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.form-config {
+  overflow-x: auto;
+}
+
+.config-json {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  padding: 20px;
+  color: #00D4FF;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .header-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  
+  .edit-button, .duplicate-button, .status-button, .delete-button {
+    flex: 1;
+    text-align: center;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  
+  .form-info-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .form-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .tab-content {
+    padding: 20px;
+  }
+}
